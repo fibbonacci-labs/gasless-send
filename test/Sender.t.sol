@@ -31,18 +31,17 @@ contract SenderTest is PRBTest, StdCheats {
     function testSent() public {
         uint amountLeft = initial_suppy - AMOUNT;
         uint256 deadline = block.timestamp + 60;
-        //prepare permit message
+        //prepare typed message
         bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
 
-        //sign typed message
+        //signed typed message
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SENDER_PRIVATE_KEY, permitHash);
-        //execute
+        //execute sent
         gasless_sender.send(bob, maria, AMOUNT, deadline, v, r, s);
-        //check token balances
 
-        //sender should be zero due amount goes to receiver
+        //bob balance should be left amount 
         assertEq(usdc.balanceOf(bob), amountLeft, "owner balance");
-        //receiver should be total amount due to sender sending it all
+        //maria balance should be amount due from bob
         assertEq(usdc.balanceOf(maria), AMOUNT, "receiver balance");
     }
 
