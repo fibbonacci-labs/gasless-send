@@ -33,7 +33,7 @@ contract SenderTest is PRBTest, StdCheats {
         uint256 amountLeft = initial_suppy - AMOUNT;
 
         //prepare typed message
-        bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
+        bytes32 permitHash = get_hash();
 
         //signed typed message
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SENDER_PRIVATE_KEY, permitHash);
@@ -46,9 +46,13 @@ contract SenderTest is PRBTest, StdCheats {
         assertEq(usdc.balanceOf(maria), AMOUNT, "receiver balance");
     }
 
+    function get_hash() internal view returns (bytes32) {
+        return _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
+    }
+
     function testRevert_OnlyGelatoRelayERC2771() public {
         //prepare typed message
-        bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
+        bytes32 permitHash = get_hash();
 
         //signed typed message
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SENDER_PRIVATE_KEY, permitHash);
@@ -61,7 +65,7 @@ contract SenderTest is PRBTest, StdCheats {
 
     function testRevert_InvalidSenderAddress() public {
         //prepare typed message
-        bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
+        bytes32 permitHash = get_hash();
 
         //signed typed message
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SENDER_PRIVATE_KEY, permitHash);
@@ -72,7 +76,7 @@ contract SenderTest is PRBTest, StdCheats {
 
     function testRevert_InvalidReceiverAddress() public {
         //prepare typed message
-        bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
+        bytes32 permitHash = get_hash();
 
         //signed typed message
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SENDER_PRIVATE_KEY, permitHash);
@@ -82,7 +86,7 @@ contract SenderTest is PRBTest, StdCheats {
 
     function testRevert_TransferAmount() public {
         //prepare typed message
-        bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
+        bytes32 permitHash = get_hash();
 
         //signed typed message
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SENDER_PRIVATE_KEY, permitHash);
