@@ -15,7 +15,7 @@ contract Sender is ERC2771Context, ReentrancyGuard {
 
     event TokenTransferred(address indexed sender, address indexed receiver, uint256 amount);
 
-     // ERC2771Context: setting the immutable trustedForwarder variable
+    // ERC2771Context: setting the immutable trustedForwarder variable
     constructor(address trustedForwarder, address _token) ERC2771Context(trustedForwarder) {
         token = ERC20Permit(_token);
     }

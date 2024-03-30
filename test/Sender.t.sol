@@ -16,10 +16,10 @@ contract SenderTest is PRBTest, StdCheats {
     address bob;
     address maria = address(2);
 
-    uint256 constant AMOUNT = 10000000; // 10 USD
+    uint256 constant AMOUNT = 10_000_000; // 10 USD
     uint256 constant SENDER_PRIVATE_KEY = 2222;
     uint256 constant FEE = 10;
-    uint constant initial_suppy = 1e12;
+    uint256 constant initial_suppy = 1e12;
     uint256 deadline = block.timestamp + 60;
 
     function setUp() public virtual {
@@ -30,8 +30,8 @@ contract SenderTest is PRBTest, StdCheats {
     }
 
     function testSent() public {
-        uint amountLeft = initial_suppy - AMOUNT;
-        
+        uint256 amountLeft = initial_suppy - AMOUNT;
+
         //prepare typed message
         bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
 
@@ -40,14 +40,14 @@ contract SenderTest is PRBTest, StdCheats {
         //execute sent
         gasless_sender.send(bob, maria, AMOUNT, deadline, v, r, s);
 
-        //bob balance should be left amount 
+        //bob balance should be left amount
         assertEq(usdc.balanceOf(bob), amountLeft, "owner balance");
         //maria balance should be amount due from bob
         assertEq(usdc.balanceOf(maria), AMOUNT, "receiver balance");
     }
 
     function testRevert_OnlyGelatoRelayERC2771() public {
-         //prepare typed message
+        //prepare typed message
         bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
 
         //signed typed message
@@ -60,7 +60,7 @@ contract SenderTest is PRBTest, StdCheats {
     }
 
     function testRevert_InvalidSenderAddress() public {
-         //prepare typed message
+        //prepare typed message
         bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
 
         //signed typed message
@@ -71,7 +71,7 @@ contract SenderTest is PRBTest, StdCheats {
     }
 
     function testRevert_InvalidReceiverAddress() public {
-         //prepare typed message
+        //prepare typed message
         bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
 
         //signed typed message
@@ -81,7 +81,7 @@ contract SenderTest is PRBTest, StdCheats {
     }
 
     function testRevert_TransferAmount() public {
-         //prepare typed message
+        //prepare typed message
         bytes32 permitHash = _getPermitHash(bob, address(gasless_sender), AMOUNT, usdc.nonces(bob), deadline);
 
         //signed typed message
